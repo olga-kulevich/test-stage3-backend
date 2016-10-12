@@ -6,5 +6,3 @@ function getAuthorById(req, res) {
 }
 
 //TODO add other methods
-
-module.exports.getAuthorById = getAuthorById;

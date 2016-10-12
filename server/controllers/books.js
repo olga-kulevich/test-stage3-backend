@@ -7,5 +7,3 @@ function getBookById(req, res) {
 
 //TODO add other methods
 
-module.exports.getBookById = getBookById;
-
