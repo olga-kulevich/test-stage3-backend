@@ -14,6 +14,7 @@ function DAO(config) {
  * Create database instance and load init data
  * @param {Object} data - init database data
  * @param {Function} callback - two params err, callback result
+ * @returns {void}
  */
 DAO.prototype.init = function (data, callback) {
     //TODO create instance and load data
@@ -23,6 +24,7 @@ DAO.prototype.init = function (data, callback) {
 /**
  * Clear database
  * @param {Function} callback - two params err, callback result
+ * @returns {void}
  */
 DAO.prototype.clear = function(callback) {
     //TODO clear database
