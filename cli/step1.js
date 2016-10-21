@@ -1,4 +1,5 @@
 /*************************************** STEP 1 ***********************************************************************/
+var fs = require('fs');
 var inquirer = require('inquirer');
 var clear = require('clear');
 var chalk = require('chalk');
@@ -10,10 +11,11 @@ module.exports = function step1() {
     Пройдите тест. Выбирите правильные варианты ответов.\n\n
 `));
 
-    inquirer.prompt(require('./questions')).then(function (answers) {
-        // TODO
-        console.log(JSON.stringify(answers, null, '  '));
-        clear();
-        step2();
+    inquirer.prompt(require('./ru_questions')).then(function (answers) {
+        fs.writeFile('answers.json', JSON.stringify(answers, null, '  '), (err) => {
+            if (err) throw err;
+            clear();
+            step2();
+        });
     });
 };

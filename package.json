@@ -9,7 +9,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node server/app.js",
-    "test": "mocha --reporter spec \"server/tests/*.test.js\""
+    "test": "eslint server && mocha --reporter spec \"server/tests/*.test.js\""
   },
   "author": "*instinctools",
   "license": "MIT",
@@ -28,6 +28,7 @@
   "devDependencies": {
     "chai": "^3.5.0",
     "mocha": "^3.1.0",
-    "supertest": "^2.0.0"
+    "supertest": "^2.0.0",
+    "eslint": "2.11"
   }
 }
