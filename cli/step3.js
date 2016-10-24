@@ -2,6 +2,7 @@
 var inquirer = require('inquirer');
 var clear = require('clear');
 var chalk = require('chalk');
+var step4 = require('./step4');
 
 module.exports = function step3() {
     console.log(chalk.green('\n\n#STEP 3: Client side (SPA)\n'));
@@ -31,6 +32,6 @@ module.exports = function step3() {
         }
     ]).then(function (answers) {
         clear();
-        console.log(chalk.green('\n\n#STEP 3: Client side (SPA)\n'));
+        step4();
     });
 };

@@ -5,6 +5,7 @@ var inquirer = require('inquirer');
 var step1 = require('./cli/step1');
 var step2 = require('./cli/step2');
 var step3 = require('./cli/step3');
+var step4 = require('./cli/step4');
 
 var program = require('commander');
 
@@ -27,5 +28,8 @@ if (program.step === '2') {
 }
 if (program.step === '3') {
     return step3();
+}
+if (program.step === '4') {
+    return step4();
 }
 step1();
