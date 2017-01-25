@@ -29,4 +29,15 @@ And perform all the tasks step by step
 ![s4](https://bytebucket.org/archik/itools-candidate-test/raw/d99a8e7bb728c1fb2aa91fc9516e01c5e5f94f0c/media/s4.png "s4")
 
 
-You can run specific test step via command `node itools-candidate-test --step 2` or `node itools-candidate-test -s 2`
+You can run specific test step via command
+```
+node itools-candidate-test --step 2
+```
+or short form
+```
+node itools-candidate-test -s 2
+```
+
+## License
+Copyright (c) 2016 archik
+Licensed under the MIT license.
