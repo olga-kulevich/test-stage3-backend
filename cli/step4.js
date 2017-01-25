@@ -9,7 +9,7 @@ module.exports = function step4() {
     (ответы на вопросы и готовое веб-приложение)
     
     Оповестите об этом наших HR-специалистов, вышлите ваше резюме и ссылку репозитория на почтовый ящик 
-    ${console.log(chalk.blue('resume@instinctools.ru'))}\n
+    ${chalk.blue('resume@instinctools.ru')}\n
     `));
 
     console.log(chalk.green('\n\nhttp://www.instinctools.by | http://www.instinctools.eu | http://nodejs-experts.com\n'));
