@@ -1,5 +1,5 @@
 # *itools Full Stack Test
-![logo]( "logo")
+![logo](https://bytebucket.org/archik/itools-candidate-test/raw/53dd1b388d2218b67a49ba18512393f3657d3e9e/media/logo.png "logo")
 
 
 Please, run test via command `node itools-candidate-test` or `node itools-candidate-test/index.js`
