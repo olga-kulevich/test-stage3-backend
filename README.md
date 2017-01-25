@@ -1,8 +1,25 @@
-*itools Candidate JavaScript Test
+# *itools Full Stack Test
+![logo]( "logo")
+
 
 Please, run test via command `node itools-candidate-test` or `node itools-candidate-test/index.js`
 And perform all the tasks step by step
 
-You can run specific test step via command `node itools-candidate-test --step 2` or `node itools-candidate-test -s 2`
+## Step 1. Complete test (RUS language)
 
-[Instinctools By](http://www.instinctools.by) | [Instinctools Eu](http://www.instinctools.eu) | [Nodejs-Experts](http://nodejs-experts.com)
+![s1]( "s1")
+
+## Step 2. Complete server side part of application
+
+![s2]( "s2")
+
+## Step 3. Complete client side part of application
+
+![s3]( "s3")
+
+## Step 4. Publish your results
+
+![s4]( "s4")
+
+
+You can run specific test step via command `node itools-candidate-test --step 2` or `node itools-candidate-test -s 2`
