@@ -3,4 +3,3 @@ node_modules/
 dist/
 .idea/
 checker.js
-answers.json
