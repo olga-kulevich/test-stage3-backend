@@ -364,14 +364,14 @@ describe('Authors', function () {
         });
     });
     describe('Controller', function () {
-        it('has method "getAuthors"', function (done) {
+        it('has method "getAuthorById"', function (done) {
             assert.typeOf(controller, 'object');
             assert.property(controller, 'getAuthorById');
             assert.typeOf(controller.getAuthorById, 'function');
             assert.equal(controller.getAuthorById.length, 2);
             done();
         });
-        it('has method "getAuthorById"', function (done) {
+        it('has method "getAuthors"', function (done) {
             assert.typeOf(controller, 'object');
             assert.property(controller, 'getAuthors');
             assert.typeOf(controller.getAuthors, 'function');
