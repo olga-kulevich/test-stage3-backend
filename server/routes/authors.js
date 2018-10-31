@@ -8,5 +8,6 @@ const router = express.Router();
 // TODO Add other author routes
 //router.get('/:id', controller.getAuthorById);
 
-module.exports = router;
+router.get('/', controller.getAuthors);
 
+module.exports = router;
