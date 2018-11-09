@@ -6,7 +6,7 @@ let controller = {};
  * @param {Object} res - HTTP response object
  * @returns {void}
  */
-function getAuthorById(req, res) {
+controller.getAuthorById = function (req, res) {
     //TODO implement
     res.send('');
 }
