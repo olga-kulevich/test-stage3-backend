@@ -30,4 +30,14 @@ controller.updateAuthor= function (req, res) {
     res.send('');
 }
 
+/**
+ * Delete author
+ * @param {Object} req - HTTP request object
+ * @param {Object} res - HTTP response object
+ * @returns {void}
+ */
+controller.removeAuthor= function (req, res) {
+    res.send('');
+}
+
 module.exports = controller;
