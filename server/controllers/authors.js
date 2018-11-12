@@ -41,6 +41,16 @@ controller.patchAuthor= function (req, res) {
 }
 
 /**
+ * Create author
+ * @param {Object} req - HTTP request object
+ * @param {Object} res - HTTP response object
+ * @returns {void}
+ */
+controller.createAuthor= function (req, res) {
+    res.send('');
+}
+
+/**
  * Delete author
  * @param {Object} req - HTTP request object
  * @param {Object} res - HTTP response object

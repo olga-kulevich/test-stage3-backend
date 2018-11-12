@@ -14,6 +14,8 @@ router.put('/:id', controller.updateAuthor);
 
 router.patch('/:id', controller.patchAuthor);
 
+router.post('/', controller.createAuthor);
+
 router.delete('/:id', controller.removeAuthor);
 
 module.exports = router;
