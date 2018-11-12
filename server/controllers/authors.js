@@ -20,4 +20,14 @@ controller.getAuthors = function (req, res) {
     res.send('');
 }
 
+/**
+ * Update author
+ * @param {Object} req - HTTP request object
+ * @param {Object} res - HTTP response object
+ * @returns {void}
+ */
+controller.updateAuthor= function (req, res) {
+    res.send('');
+}
+
 module.exports = controller;

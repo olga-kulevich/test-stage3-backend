@@ -10,4 +10,6 @@ router.get('/:id', controller.getAuthorById);
 
 router.get('/', controller.getAuthors);
 
+router.put('/:id', controller.updateAuthor);
+
 module.exports = router;
