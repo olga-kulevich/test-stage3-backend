@@ -40,6 +40,7 @@
     "figlet": "1.2.0",
     "inquirer": "1.2.1",
     "minimist": "1.2.0",
+    "mongoose": "^5.3.11",
     "preferences": "0.2.1"
   },
   "devDependencies": {
