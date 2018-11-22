@@ -1,4 +1,5 @@
-//TODO implement Data Access Layer
+let mongoose = require('mongoose');
+mongoose.Promise = global.Promise;
 
 /**
  * Data Access Layer
@@ -7,7 +8,7 @@
  * @param {Object} config - database config
  */
 function DAO(config) {
-    //TODO init database
+    this.config = config;
 }
 
 /**
@@ -17,8 +18,28 @@ function DAO(config) {
  * @returns {void}
  */
 DAO.prototype.init = function (data, callback) {
-    //TODO create instance and load data
-    callback && callback();
+    let host = this.config.host,
+        port = this.config.port,
+        name = this.config.name;
+
+    mongoose
+        .connect(
+            `mongodb://${host}:${port}/${name}`,
+            {
+                useNewUrlParser: true,
+                auto_reconnect: true,
+                reconnectTries: Number.MAX_VALUE,
+                autoIndex: false,
+                reconnectInterval: 1000
+            }
+        )
+        .then((res) => {
+            callback && callback(null, res);
+        })
+        .catch((err) => {
+            callback && callback(err);
+            console.log('Connection error: ' + err);
+        });
 };
 
 /**

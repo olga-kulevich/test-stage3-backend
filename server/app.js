@@ -10,7 +10,11 @@ const books = require('./routes/books');
 const PORT = 3000;
 
 const app = express();
-const dao = new DAO(/*config*/);
+const dao = new DAO({
+    host: 'localhost',
+    port: 27017,
+    name: 'testing'
+});
 
 /**
  * Middleware
@@ -33,7 +37,6 @@ app.use('/api/books', books);
  * Init database
  */
 dao.init({/*init data*/}, (err, db) => {
-
     if (err) {
         console.error(err);
     }
