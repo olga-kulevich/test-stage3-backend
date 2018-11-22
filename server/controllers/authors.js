@@ -1,5 +1,8 @@
 'use strict';
-let controller = {};
+const Author = require('../dao/author');
+const mongoose = require('mongoose');
+const controller = {};
+
 /**
  * Send specific author entity by id
  * @param {Object} req - HTTP request object
@@ -46,9 +49,30 @@ controller.patchAuthor= function (req, res) {
  * @param {Object} res - HTTP response object
  * @returns {void}
  */
-controller.createAuthor= function (req, res) {
-    res.send('');
-}
+controller.createAuthor = function (req, res) {
+    let id = req.body._id;
+
+    if (!id) {
+       id = new mongoose.Types.ObjectId();
+    }
+
+    const author = new Author({
+        _id: id,
+        email: req.body.email,
+        firstName: req.body.firstName,
+        secondName: req.body.secondName,
+        book: req.body.book,
+        birthDate: req.body.birthDate
+    });
+
+    author.save()
+        .then(function(){
+            res.status(201).send({author});
+        })
+        .catch(function(err){
+            console.error(err);
+        });
+};
 
 /**
  * Delete author
