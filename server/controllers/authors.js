@@ -81,7 +81,13 @@ controller.createAuthor = function (req, res) {
  * @returns {void}
  */
 controller.removeAuthor= function (req, res) {
-    res.send('');
-}
+    Author.findByIdAndRemove({_id: req.params.id})
+        .then(function() {
+            res.status(200).send({status: 'OK'});
+        })
+        .catch(function(error) {
+            res.status(404).send({error});
+        });
+};
 
 module.exports = controller;
