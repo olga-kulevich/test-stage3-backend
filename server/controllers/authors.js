@@ -29,7 +29,19 @@ controller.getAuthorById = function (req, res) {
  * @returns {void}
  */
 controller.getAuthors = function (req, res) {
-    res.send('');
+    Author.find({})
+        .then(function(allAuthors) {
+            let authors = [];
+
+            allAuthors.forEach(function(author) {
+                authors.push(author);
+            });
+
+            res.status(200).send({authors: authors});
+        })
+        .catch(function(err) {
+            console.error(err);
+        });
 }
 
 /**
