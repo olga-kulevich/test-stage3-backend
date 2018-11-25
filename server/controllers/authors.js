@@ -10,9 +10,18 @@ const controller = {};
  * @returns {void}
  */
 controller.getAuthorById = function (req, res) {
-    //TODO implement
-    res.send('');
-}
+    Author.findById({_id: req.params.id})
+        .then(function(author) {
+            if (author) {
+                res.status(200).send({author: author});
+            } else {
+                res.status(404).send({errors: ["Author not exist"]});
+            }
+        })
+        .catch(function(error){
+            res.status(404).send({error});
+        });
+};
 /**
  * Send author collection
  * @param {Object} req - HTTP request object
