@@ -236,8 +236,8 @@ controller.removeAuthor= function (req, res) {
         .then(function() {
             res.status(200).send({status: 'OK'});
         })
-        .catch(function(error) {
-            res.status(404).send({error});
+        .catch(function() {
+            res.status(404).send({errors: ["Author not exist"]});
         });
 };
 
