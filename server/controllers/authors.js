@@ -189,27 +189,40 @@ controller.patchAuthor = function (req, res) {
  */
 controller.createAuthor = function (req, res) {
     let id = req.body._id;
+    let resultValidation = validationResult(req).formatWith(errorFormatter);
 
-    if (!id) {
-       id = new mongoose.Types.ObjectId();
-    }
+    if (!resultValidation.isEmpty()) {
+        res.status(400).send({errors: resultValidation.array()});
+    } else {
+        Author.findById({_id: id}, function (err, existedAuthor) {
+            if (!existedAuthor) {
+                if (!id) {
+                    id = new mongoose.Types.ObjectId();
+                }
 
-    const author = new Author({
-        _id: id,
-        email: req.body.email,
-        firstName: req.body.firstName,
-        secondName: req.body.secondName,
-        book: req.body.book,
-        birthDate: req.body.birthDate
-    });
+                const author = new Author({
+                    _id: id,
+                    email: req.body.email,
+                    firstName: req.body.firstName,
+                    secondName: req.body.secondName,
+                    book: req.body.book,
+                    birthDate: req.body.birthDate
+                });
 
-    author.save()
-        .then(function(){
-            res.status(201).send({author});
-        })
-        .catch(function(err){
-            console.error(err);
+                author.save()
+                    .then(function () {
+                        res.status(201).send({author});
+                    })
+                    .catch(function (err) {
+                        console.error(err);
+                    });
+            } else {
+                res
+                    .status(400)
+                    .send({errors: ["Author with this id already exist"]});
+            }
         });
+    }
 };
 
 /**
