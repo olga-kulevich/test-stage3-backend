@@ -140,9 +140,46 @@ controller.updateAuthor = function (req, res) {
  * @param {Object} res - HTTP response object
  * @returns {void}
  */
-controller.patchAuthor= function (req, res) {
-    res.send('');
-}
+controller.patchAuthor = function (req, res) {
+    let id = req.params.id;
+    let resultValidation = validationResult(req).formatWith(errorFormatter);
+
+    if (!resultValidation.isEmpty()) {
+        res.status(400).send({errors: resultValidation.array()});
+    } else {
+        Author.findById({_id: id}, function (err, existingAuthor) {
+            if (existingAuthor && (!req.body._id || existingAuthor._id === req.body._id)) {
+                if (req.body._id) {
+                    delete req.body._id;
+                }
+                for (let pr in req.body) {
+                    existingAuthor[pr] = req.body[pr];
+                }
+                existingAuthor.save()
+                    .then(function(author) {
+                        res.status(200).send({author});
+                    })
+                    .catch(function(err) {
+                        console.error(err);
+                    })
+            } else if (!existingAuthor) {
+                res.status(404).send({errors: ["Author not exist"]});
+            } else if (req.body._id) {
+                Author.findById({_id: req.body._id})
+                    .then(function(findAuthor) {
+                        if (findAuthor) {
+                            res
+                                .status(400)
+                                .send({errors: ["Author with this id already exist"]});
+                        }
+                    })
+                    .catch(function(err) {
+                        console.error(err)
+                    })
+            }
+        });
+    }
+};
 
 /**
  * Create author
