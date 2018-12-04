@@ -2,6 +2,7 @@
 
 const express = require('express');
 const bodyParser = require('body-parser');
+const expressValidator = require('express-validator');
 const path = require('path');
 const DAO = require('./dao');
 const authors = require('./routes/authors');

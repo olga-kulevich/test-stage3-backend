@@ -1,7 +1,42 @@
 'use strict';
 const Author = require('../dao/author');
 const mongoose = require('mongoose');
+const {body, validationResult} = require('express-validator/check');
+
 const controller = {};
+
+/**
+ * Provide list of validation rules
+ * @param {String} method - the name of controller method
+ * @returns {Array} list of validation rules
+ */
+controller.validate = function (method) {
+    switch (method) {
+        case 'updateAuthor':
+            return [
+                body('email', 'E-mail is require').exists({checkFalsy: true})
+            ];
+        case 'createAuthor':
+            return [
+                body('email', 'E-mail is require').exists({checkFalsy: true})
+            ];
+        case 'patchAuthor':
+            return [
+                body ('email', 'E-mail is require')
+                    .exists({checkFalsy: true})
+                    .optional()
+            ];
+    }
+};
+
+/**
+ * Format validation result (error)
+ * @param {{msg: String}} error - error argument
+ * @returns {String} error text message
+ */
+function errorFormatter({msg}) {
+    return `${msg}`;
+}
 
 /**
  * Send specific author entity by id
@@ -22,6 +57,7 @@ controller.getAuthorById = function (req, res) {
             res.status(404).send({error});
         });
 };
+
 /**
  * Send author collection
  * @param {Object} req - HTTP request object
