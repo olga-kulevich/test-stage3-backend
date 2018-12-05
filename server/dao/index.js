@@ -1,5 +1,6 @@
 let mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
+const Author = require('../dao/author');
 
 /**
  * Data Access Layer
@@ -21,11 +22,13 @@ DAO.prototype.init = function (data, callback) {
     let host = this.config.host,
         port = this.config.port,
         name = this.config.name;
+    let counter = 0;
 
     mongoose
         .connect(
             `mongodb://${host}:${port}/${name}`,
             {
+                useFindAndModify: false,
                 useNewUrlParser: true,
                 auto_reconnect: true,
                 reconnectTries: Number.MAX_VALUE,
@@ -33,12 +36,29 @@ DAO.prototype.init = function (data, callback) {
                 reconnectInterval: 1000
             }
         )
-        .then((res) => {
-            callback && callback(null, res);
+        .then(function(connection) {
+            if (data && data.collections) {
+                data.collections.forEach((collection) => {
+                    if (collection.name === 'authors') {
+                        collection.rows.forEach((authorData) => {
+                            const author = new Author(authorData);
+                            author.save()
+                                .then(function() {
+                                    counter++;
+                                    if (counter === collection.rows.length){
+                                        callback && callback(null, connection);
+                                    }
+                                })
+                                .catch(function(err) {
+                                    callback && callback(err);
+                                });
+                        });
+                    }
+                });
+            }
         })
-        .catch((err) => {
-            callback && callback(err);
-            console.log('Connection error: ' + err);
+        .catch(function(error) {
+            callback && callback(error);
         });
 };
 
@@ -48,8 +68,13 @@ DAO.prototype.init = function (data, callback) {
  * @returns {void}
  */
 DAO.prototype.clear = function(callback) {
-    //TODO clear database
-    callback && callback();
+    Author.deleteMany({})
+        .then(function (result) {
+            callback && callback(null, result);
+        })
+        .catch(function (err) {
+            callback && callback(err);
+        });
 };
 
 module.exports = DAO;
