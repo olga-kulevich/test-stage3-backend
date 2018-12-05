@@ -231,13 +231,18 @@ controller.createAuthor = function (req, res) {
  * @param {Object} res - HTTP response object
  * @returns {void}
  */
-controller.removeAuthor= function (req, res) {
+controller.removeAuthor = function (req, res) {
     Author.findByIdAndRemove({_id: req.params.id})
-        .then(function() {
-            res.status(200).send({status: 'OK'});
+        .then(function(item) {
+            if (!item) {
+                res.status(404).send({errors: ["Author not exist"]});
+            }
+            if (item) {
+                res.status(200).send({status: 'OK'});
+            }
         })
-        .catch(function() {
-            res.status(404).send({errors: ["Author not exist"]});
+        .catch(function(err) {
+            console.error(err);
         });
 };
 
