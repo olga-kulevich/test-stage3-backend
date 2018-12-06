@@ -1,6 +1,7 @@
 let mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 const Author = require('../dao/author');
+const Book = require('../dao/book');
 
 /**
  * Data Access Layer
@@ -54,6 +55,21 @@ DAO.prototype.init = function (data, callback) {
                                 });
                         });
                     }
+                    if (collection.name === 'books') {
+                        collection.rows.forEach((bookData) => {
+                            const book = new Book(bookData);
+                            book.save()
+                                .then(function() {
+                                    counter++;
+                                    if (counter === collection.rows.length){
+                                        callback && callback(null, connection);
+                                    }
+                                })
+                                .catch(function(err) {
+                                    callback && callback(err);
+                                });
+                        });
+                    }
                 });
             }
         })
@@ -69,6 +85,13 @@ DAO.prototype.init = function (data, callback) {
  */
 DAO.prototype.clear = function(callback) {
     Author.deleteMany({})
+        .then(function (result) {
+            callback && callback(null, result);
+        })
+        .catch(function (err) {
+            callback && callback(err);
+        });
+    Book.deleteMany({})
         .then(function (result) {
             callback && callback(null, result);
         })
