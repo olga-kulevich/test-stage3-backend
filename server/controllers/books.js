@@ -44,10 +44,19 @@ function errorFormatter({msg}) {
  * @param {Object} res - HTTP response object
  * @returns {void}
  */
-function getBookById(req, res) {
-    //TODO implement
-    res.send('');
-}
+controller.getBookById = function (req, res) {
+    Book.findById({_id: req.params.id})
+        .then(function(book) {
+            if (book) {
+                res.status(200).send({book: book});
+            } else {
+                res.status(404).send({errors: ["Book not exist"]});
+            }
+        })
+        .catch(function(error){
+            res.status(404).send({error});
+        });
+};
 
 //TODO add other methods
 
