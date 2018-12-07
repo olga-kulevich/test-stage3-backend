@@ -183,6 +183,52 @@ controller.patchBook = function (req, res) {
     }
 };
 
+/**
+ * Create book
+ * @param {Object} req - HTTP request object
+ * @param {Object} res - HTTP response object
+ * @returns {void}
+ */
+controller.createBook = function (req, res) {
+    let id = req.body._id;
+    let resultValidation = validationResult(req).formatWith(errorFormatter);
+
+    if (!resultValidation.isEmpty()) {
+        res.status(400).send({errors: resultValidation.array()});
+    } else {
+       Book.findById({_id: id}, function (err, existedBook) {
+            if (!existedBook) {
+                if (!id) {
+                    id = new mongoose.Types.ObjectId();
+                }
+
+                const book = new Book({
+                    _id: id,
+                    name: req.body.name,
+                    publishing: req.body.publishing,
+                    ebook: req.body.ebook,
+                    isbn: req.body.isbn,
+                    author: req.body.author,
+                    pages: req.body.pages,
+                    year: req.body.year
+                });
+
+                book.save()
+                    .then(function () {
+                        res.status(201).send({book});
+                    })
+                    .catch(function (err) {
+                        console.error(err);
+                    });
+            } else {
+                res
+                    .status(400)
+                    .send({errors: ["Book with this id already exist"]});
+            }
+        });
+    }
+};
+
 //TODO add other methods
 
 module.exports = controller;
