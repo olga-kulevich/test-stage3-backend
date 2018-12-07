@@ -58,5 +58,28 @@ controller.getBookById = function (req, res) {
         });
 };
 
+/**
+ * Send book collection
+ * @param {Object} req - HTTP request object
+ * @param {Object} res - HTTP response object
+ * @returns {void}
+ */
+controller.getBooks = function (req, res) {
+    Book.find({})
+        .then(function(allBooks) {
+            let books = [];
+
+            allBooks.forEach(function(book) {
+                books.push(book);
+            });
+
+            res.status(200).send({books: books});
+        })
+        .catch(function(err) {
+            console.error(err);
+        });
+};
+
 //TODO add other methods
 
+module.exports = controller;
