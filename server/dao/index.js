@@ -23,7 +23,8 @@ DAO.prototype.init = function (data, callback) {
     let host = this.config.host,
         port = this.config.port,
         name = this.config.name;
-    let counter = 0;
+    let quantityInserted = 0;
+    let quantityToInsert = 0;
 
     mongoose
         .connect(
@@ -39,14 +40,19 @@ DAO.prototype.init = function (data, callback) {
         )
         .then(function(connection) {
             if (data && data.collections) {
+
+                data.collections.forEach((collection) => {
+                    quantityToInsert = quantityToInsert + collection.rows.length;
+                });
+
                 data.collections.forEach((collection) => {
                     if (collection.name === 'authors') {
                         collection.rows.forEach((authorData) => {
                             const author = new Author(authorData);
                             author.save()
                                 .then(function() {
-                                    counter++;
-                                    if (counter === collection.rows.length){
+                                    quantityInserted++;
+                                    if (quantityInserted === quantityToInsert){
                                         callback && callback(null, connection);
                                     }
                                 })
@@ -60,8 +66,8 @@ DAO.prototype.init = function (data, callback) {
                             const book = new Book(bookData);
                             book.save()
                                 .then(function() {
-                                    counter++;
-                                    if (counter === collection.rows.length){
+                                    quantityInserted++;
+                                    if (quantityInserted === quantityToInsert){
                                         callback && callback(null, connection);
                                     }
                                 })
@@ -84,14 +90,7 @@ DAO.prototype.init = function (data, callback) {
  * @returns {void}
  */
 DAO.prototype.clear = function(callback) {
-    Author.deleteMany({})
-        .then(function (result) {
-            callback && callback(null, result);
-        })
-        .catch(function (err) {
-            callback && callback(err);
-        });
-    Book.deleteMany({})
+    mongoose.connection.dropDatabase()
         .then(function (result) {
             callback && callback(null, result);
         })
