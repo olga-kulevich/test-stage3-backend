@@ -135,6 +135,54 @@ controller.updateBook = function (req, res) {
         });
     }
 };
+
+/**
+ * Patch book
+ * @param {Object} req - HTTP request object
+ * @param {Object} res - HTTP response object
+ * @returns {void}
+ */
+controller.patchBook = function (req, res) {
+    let id = req.params.id;
+    let resultValidation = validationResult(req).formatWith(errorFormatter);
+
+    if (!resultValidation.isEmpty()) {
+        res.status(400).send({errors: resultValidation.array()});
+    } else {
+        Book.findById({_id: id}, function (err, existingBook) {
+            if (existingBook && (!req.body._id || existingBook._id === req.body._id)) {
+                if (req.body._id) {
+                    delete req.body._id;
+                }
+                for (let pr in req.body) {
+                    existingBook[pr] = req.body[pr];
+                }
+                existingBook.save()
+                    .then(function(book) {
+                        res.status(200).send({book});
+                    })
+                    .catch(function(err) {
+                        console.error(err);
+                    })
+            } else if (!existingBook) {
+                res.status(404).send({errors: ["Book not exist"]});
+            } else if (req.body._id) {
+                Book.findById({_id: req.body._id})
+                    .then(function(findBook) {
+                        if (findBook) {
+                            res
+                                .status(400)
+                                .send({errors: ["Book with this id already exist"]});
+                        }
+                    })
+                    .catch(function(err) {
+                        console.error(err)
+                    })
+            }
+        });
+    }
+};
+
 //TODO add other methods
 
 module.exports = controller;
