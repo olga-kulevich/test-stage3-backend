@@ -229,6 +229,25 @@ controller.createBook = function (req, res) {
     }
 };
 
-//TODO add other methods
+/**
+ * Delete book
+ * @param {Object} req - HTTP request object
+ * @param {Object} res - HTTP response object
+ * @returns {void}
+ */
+controller.removeBook = function (req, res) {
+    Book.findByIdAndRemove({_id: req.params.id})
+        .then(function(item) {
+            if (!item) {
+                res.status(404).send({errors: ["Book not exist"]});
+            }
+            if (item) {
+                res.status(200).send({status: 'OK'});
+            }
+        })
+        .catch(function(err) {
+            console.error(err);
+        });
+};
 
 module.exports = controller;
