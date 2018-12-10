@@ -1,6 +1,7 @@
 'use strict';
 const Author = require('../dao/author');
 const mongoose = require('mongoose');
+const errorFormatter = require('./validate/error_formatter');
 const {body, validationResult} = require('express-validator/check');
 
 const controller = {};
@@ -28,15 +29,6 @@ controller.validate = function (method) {
             ];
     }
 };
-
-/**
- * Format validation result (error)
- * @param {{msg: String}} error - error argument
- * @returns {String} error text message
- */
-function errorFormatter({msg}) {
-    return `${msg}`;
-}
 
 /**
  * Send specific author entity by id
