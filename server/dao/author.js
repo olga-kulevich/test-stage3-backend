@@ -1,4 +1,6 @@
-let mongoose = require('mongoose');
+'use strict';
+
+const mongoose = require('mongoose');
 
 const authorSchema = mongoose.Schema(
     {
@@ -15,6 +17,6 @@ const authorSchema = mongoose.Schema(
     {versionKey: false}
 );
 
-let Author = mongoose.model('Author', authorSchema);
+const Author = mongoose.model('Author', authorSchema);
 
 module.exports = Author;

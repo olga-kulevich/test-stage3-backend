@@ -1,4 +1,5 @@
 'use strict';
+
 const Author = require('../dao/author');
 const mongoose = require('mongoose');
 const errorFormatter = require('./validate/error_formatter');
@@ -11,7 +12,7 @@ const controller = {};
  * @param {String} method - the name of controller method
  * @returns {Array} list of validation rules
  */
-controller.validate = function (method) {
+controller.validate = (method) => {
     switch (method) {
         case 'updateAuthor':
             return [
@@ -36,16 +37,16 @@ controller.validate = function (method) {
  * @param {Object} res - HTTP response object
  * @returns {void}
  */
-controller.getAuthorById = function (req, res) {
+controller.getAuthorById = (req, res) => {
     Author.findById({_id: req.params.id})
-        .then(function(author) {
+        .then((author) => {
             if (author) {
                 res.status(200).send({author: author});
             } else {
                 res.status(404).send({errors: ["Author not exist"]});
             }
         })
-        .catch(function(error){
+        .catch((error) => {
             res.status(404).send({error});
         });
 };
@@ -56,21 +57,21 @@ controller.getAuthorById = function (req, res) {
  * @param {Object} res - HTTP response object
  * @returns {void}
  */
-controller.getAuthors = function (req, res) {
+controller.getAuthors = (req, res) => {
     Author.find({})
-        .then(function(allAuthors) {
+        .then((allAuthors) => {
             let authors = [];
 
-            allAuthors.forEach(function(author) {
+            allAuthors.forEach((author) => {
                 authors.push(author);
             });
 
             res.status(200).send({authors: authors});
         })
-        .catch(function(err) {
+        .catch((err) => {
             console.error(err);
         });
-}
+};
 
 /**
  * Update author
@@ -78,14 +79,14 @@ controller.getAuthors = function (req, res) {
  * @param {Object} res - HTTP response object
  * @returns {void}
  */
-controller.updateAuthor = function (req, res) {
-    let id = req.params.id;
-    let resultValidation = validationResult(req).formatWith(errorFormatter);
+controller.updateAuthor = (req, res) => {
+    const id = req.params.id;
+    const resultValidation = validationResult(req).formatWith(errorFormatter);
 
     if (!resultValidation.isEmpty()) {
         res.status(400).send({errors: resultValidation.array()});
     } else {
-        Author.findById({_id: id}, function (err, existingAuthor) {
+        Author.findById({_id: id}, (err, existingAuthor) => {
             if (existingAuthor && (!req.body._id || existingAuthor._id === req.body._id)) {
                 Author.findOneAndUpdate(
                     {_id: id},
@@ -100,25 +101,25 @@ controller.updateAuthor = function (req, res) {
                     },
                     {new: true, runValidators: true}
                 )
-                    .then(function(author) {
+                    .then((author) => {
                         res.status(200).send({author});
                     })
 
-                    .catch(function(err) {
+                    .catch((err) => {
                         console.error(err);
                     })
             } else if (!existingAuthor) {
                 res.status(404).send({errors: ["Author not exist"]});
             } else if (existingAuthor._id !== req.body._id){
                 Author.findById({_id: req.body._id})
-                    .then(function(findAuthor) {
+                    .then((findAuthor) => {
                         if (findAuthor) {
                             res
                                 .status(400)
                                 .send({errors: ["Author with this id already exist"]});
                         }
                     })
-                    .catch (function(err) {
+                    .catch ((err) => {
                         console.error(err)
                     })
             }
@@ -132,14 +133,14 @@ controller.updateAuthor = function (req, res) {
  * @param {Object} res - HTTP response object
  * @returns {void}
  */
-controller.patchAuthor = function (req, res) {
-    let id = req.params.id;
-    let resultValidation = validationResult(req).formatWith(errorFormatter);
+controller.patchAuthor = (req, res) => {
+    const id = req.params.id;
+    const resultValidation = validationResult(req).formatWith(errorFormatter);
 
     if (!resultValidation.isEmpty()) {
         res.status(400).send({errors: resultValidation.array()});
     } else {
-        Author.findById({_id: id}, function (err, existingAuthor) {
+        Author.findById({_id: id}, (err, existingAuthor) => {
             if (existingAuthor && (!req.body._id || existingAuthor._id === req.body._id)) {
                 if (req.body._id) {
                     delete req.body._id;
@@ -148,24 +149,24 @@ controller.patchAuthor = function (req, res) {
                     existingAuthor[pr] = req.body[pr];
                 }
                 existingAuthor.save()
-                    .then(function(author) {
+                    .then((author) => {
                         res.status(200).send({author});
                     })
-                    .catch(function(err) {
+                    .catch((err) => {
                         console.error(err);
                     })
             } else if (!existingAuthor) {
                 res.status(404).send({errors: ["Author not exist"]});
             } else if (req.body._id) {
                 Author.findById({_id: req.body._id})
-                    .then(function(findAuthor) {
+                    .then((findAuthor) => {
                         if (findAuthor) {
                             res
                                 .status(400)
                                 .send({errors: ["Author with this id already exist"]});
                         }
                     })
-                    .catch(function(err) {
+                    .catch((err) => {
                         console.error(err)
                     })
             }
@@ -179,14 +180,14 @@ controller.patchAuthor = function (req, res) {
  * @param {Object} res - HTTP response object
  * @returns {void}
  */
-controller.createAuthor = function (req, res) {
-    let id = req.body._id;
-    let resultValidation = validationResult(req).formatWith(errorFormatter);
+controller.createAuthor = (req, res) => {
+    const id = req.body._id;
+    const resultValidation = validationResult(req).formatWith(errorFormatter);
 
     if (!resultValidation.isEmpty()) {
         res.status(400).send({errors: resultValidation.array()});
     } else {
-        Author.findById({_id: id}, function (err, existedAuthor) {
+        Author.findById({_id: id}, (err, existedAuthor) => {
             if (!existedAuthor) {
                 if (!id) {
                     id = new mongoose.Types.ObjectId();
@@ -202,10 +203,10 @@ controller.createAuthor = function (req, res) {
                 });
 
                 author.save()
-                    .then(function () {
+                    .then(() => {
                         res.status(201).send({author});
                     })
-                    .catch(function (err) {
+                    .catch((err) => {
                         console.error(err);
                     });
             } else {
@@ -223,9 +224,9 @@ controller.createAuthor = function (req, res) {
  * @param {Object} res - HTTP response object
  * @returns {void}
  */
-controller.removeAuthor = function (req, res) {
+controller.removeAuthor = (req, res) => {
     Author.findByIdAndRemove({_id: req.params.id})
-        .then(function(item) {
+        .then((item) => {
             if (!item) {
                 res.status(404).send({errors: ["Author not exist"]});
             }
@@ -233,7 +234,7 @@ controller.removeAuthor = function (req, res) {
                 res.status(200).send({status: 'OK'});
             }
         })
-        .catch(function(err) {
+        .catch((err) => {
             console.error(err);
         });
 };

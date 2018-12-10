@@ -1,4 +1,5 @@
 'use strict';
+
 const Book = require('../dao/book');
 const mongoose = require('mongoose');
 const errorFormatter = require('./validate/error_formatter');
@@ -11,7 +12,7 @@ const controller = {};
  * @param {String} method - the name of controller method
  * @returns {Array} list of validation rules
  */
-controller.validate = function (method) {
+controller.validate = (method) => {
     switch (method) {
         case 'updateBook':
             return [
@@ -36,16 +37,16 @@ controller.validate = function (method) {
  * @param {Object} res - HTTP response object
  * @returns {void}
  */
-controller.getBookById = function (req, res) {
+controller.getBookById = (req, res) => {
     Book.findById({_id: req.params.id})
-        .then(function(book) {
+        .then((book) => {
             if (book) {
                 res.status(200).send({book: book});
             } else {
                 res.status(404).send({errors: ["Book not exist"]});
             }
         })
-        .catch(function(error){
+        .catch((error) => {
             res.status(404).send({error});
         });
 };
@@ -56,9 +57,9 @@ controller.getBookById = function (req, res) {
  * @param {Object} res - HTTP response object
  * @returns {void}
  */
-controller.getBooks = function (req, res) {
+controller.getBooks = (req, res) => {
     Book.find({})
-        .then(function(allBooks) {
+        .then((allBooks) => {
             let books = [];
 
             allBooks.forEach(function(book) {
@@ -67,7 +68,7 @@ controller.getBooks = function (req, res) {
 
             res.status(200).send({books: books});
         })
-        .catch(function(err) {
+        .catch((err) => {
             console.error(err);
         });
 };
@@ -78,14 +79,14 @@ controller.getBooks = function (req, res) {
  * @param {Object} res - HTTP response object
  * @returns {void}
  */
-controller.updateBook = function (req, res) {
-    let id = req.params.id;
-    let resultValidation = validationResult(req).formatWith(errorFormatter);
+controller.updateBook = (req, res) => {
+    const id = req.params.id;
+    const resultValidation = validationResult(req).formatWith(errorFormatter);
 
     if (!resultValidation.isEmpty()) {
         res.status(400).send({errors: resultValidation.array()});
     } else {
-        Book.findById({_id: id}, function (err, existingBook) {
+        Book.findById({_id: id}, (err, existingBook) => {
             if (existingBook && (!req.body._id || existingBook._id === req.body._id)) {
                 Book.findOneAndUpdate(
                     {_id: id},
@@ -102,25 +103,25 @@ controller.updateBook = function (req, res) {
                     },
                     {new: true, runValidators: true}
                 )
-                    .then(function(book) {
+                    .then((book) => {
                         res.status(200).send({book});
                     })
 
-                    .catch(function(err) {
+                    .catch((err) => {
                         console.error(err);
                     })
             } else if (!existingBook) {
                 res.status(404).send({errors: ["Book not exist"]});
             } else if (existingBook._id !== req.body._id){
                 Book.findById({_id: req.body._id})
-                    .then(function(findBook) {
+                    .then((findBook) => {
                         if (findBook) {
                             res
                                 .status(400)
                                 .send({errors: ["Book with this id already exist"]});
                         }
                     })
-                    .catch (function(err) {
+                    .catch ((err) => {
                         console.error(err)
                     })
             }
@@ -134,14 +135,14 @@ controller.updateBook = function (req, res) {
  * @param {Object} res - HTTP response object
  * @returns {void}
  */
-controller.patchBook = function (req, res) {
-    let id = req.params.id;
-    let resultValidation = validationResult(req).formatWith(errorFormatter);
+controller.patchBook = (req, res) => {
+    const id = req.params.id;
+    const resultValidation = validationResult(req).formatWith(errorFormatter);
 
     if (!resultValidation.isEmpty()) {
         res.status(400).send({errors: resultValidation.array()});
     } else {
-        Book.findById({_id: id}, function (err, existingBook) {
+        Book.findById({_id: id}, (err, existingBook) => {
             if (existingBook && (!req.body._id || existingBook._id === req.body._id)) {
                 if (req.body._id) {
                     delete req.body._id;
@@ -150,24 +151,24 @@ controller.patchBook = function (req, res) {
                     existingBook[pr] = req.body[pr];
                 }
                 existingBook.save()
-                    .then(function(book) {
+                    .then((book) => {
                         res.status(200).send({book});
                     })
-                    .catch(function(err) {
+                    .catch((err) => {
                         console.error(err);
                     })
             } else if (!existingBook) {
                 res.status(404).send({errors: ["Book not exist"]});
             } else if (req.body._id) {
                 Book.findById({_id: req.body._id})
-                    .then(function(findBook) {
+                    .then((findBook) => {
                         if (findBook) {
                             res
                                 .status(400)
                                 .send({errors: ["Book with this id already exist"]});
                         }
                     })
-                    .catch(function(err) {
+                    .catch((err) =>{
                         console.error(err)
                     })
             }
@@ -181,14 +182,14 @@ controller.patchBook = function (req, res) {
  * @param {Object} res - HTTP response object
  * @returns {void}
  */
-controller.createBook = function (req, res) {
-    let id = req.body._id;
-    let resultValidation = validationResult(req).formatWith(errorFormatter);
+controller.createBook = (req, res) => {
+    const id = req.body._id;
+    const resultValidation = validationResult(req).formatWith(errorFormatter);
 
     if (!resultValidation.isEmpty()) {
         res.status(400).send({errors: resultValidation.array()});
     } else {
-       Book.findById({_id: id}, function (err, existedBook) {
+       Book.findById({_id: id}, (err, existedBook) => {
             if (!existedBook) {
                 if (!id) {
                     id = new mongoose.Types.ObjectId();
@@ -206,10 +207,10 @@ controller.createBook = function (req, res) {
                 });
 
                 book.save()
-                    .then(function () {
+                    .then((book) => {
                         res.status(201).send({book});
                     })
-                    .catch(function (err) {
+                    .catch((err) => {
                         console.error(err);
                     });
             } else {
@@ -227,9 +228,9 @@ controller.createBook = function (req, res) {
  * @param {Object} res - HTTP response object
  * @returns {void}
  */
-controller.removeBook = function (req, res) {
+controller.removeBook = (req, res) => {
     Book.findByIdAndRemove({_id: req.params.id})
-        .then(function(item) {
+        .then((item) => {
             if (!item) {
                 res.status(404).send({errors: ["Book not exist"]});
             }
@@ -237,7 +238,7 @@ controller.removeBook = function (req, res) {
                 res.status(200).send({status: 'OK'});
             }
         })
-        .catch(function(err) {
+        .catch((err) => {
             console.error(err);
         });
 };

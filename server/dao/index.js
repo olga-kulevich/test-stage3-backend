@@ -1,5 +1,6 @@
-let mongoose = require('mongoose');
-mongoose.Promise = global.Promise;
+'use strict';
+
+const mongoose = require('mongoose');
 const Author = require('../dao/author');
 const Book = require('../dao/book');
 
@@ -20,11 +21,13 @@ function DAO(config) {
  * @returns {void}
  */
 DAO.prototype.init = function (data, callback) {
-    let host = this.config.host,
-        port = this.config.port,
-        name = this.config.name;
+    const host = this.config.host;
+    const port = this.config.port;
+    const name = this.config.name;
     let quantityInserted = 0;
     let quantityToInsert = 0;
+
+    mongoose.Promise = global.Promise;
 
     mongoose
         .connect(
@@ -34,11 +37,10 @@ DAO.prototype.init = function (data, callback) {
                 useNewUrlParser: true,
                 auto_reconnect: true,
                 reconnectTries: Number.MAX_VALUE,
-                autoIndex: false,
                 reconnectInterval: 1000
             }
         )
-        .then(function(connection) {
+        .then((connection) => {
             if (data && data.collections) {
 
                 data.collections.forEach((collection) => {
@@ -56,7 +58,7 @@ DAO.prototype.init = function (data, callback) {
                                         callback && callback(null, connection);
                                     }
                                 })
-                                .catch(function(err) {
+                                .catch((err) => {
                                     callback && callback(err);
                                 });
                         });
@@ -65,13 +67,13 @@ DAO.prototype.init = function (data, callback) {
                         collection.rows.forEach((bookData) => {
                             const book = new Book(bookData);
                             book.save()
-                                .then(function() {
+                                .then(() => {
                                     quantityInserted++;
                                     if (quantityInserted === quantityToInsert){
                                         callback && callback(null, connection);
                                     }
                                 })
-                                .catch(function(err) {
+                                .catch((err) => {
                                     callback && callback(err);
                                 });
                         });
@@ -79,7 +81,7 @@ DAO.prototype.init = function (data, callback) {
                 });
             }
         })
-        .catch(function(error) {
+        .catch((error) => {
             callback && callback(error);
         });
 };
@@ -89,12 +91,12 @@ DAO.prototype.init = function (data, callback) {
  * @param {Function} callback - two params err, callback result
  * @returns {void}
  */
-DAO.prototype.clear = function(callback) {
+DAO.prototype.clear = (callback) => {
     mongoose.connection.dropDatabase()
-        .then(function (result) {
+        .then((result) => {
             callback && callback(null, result);
         })
-        .catch(function (err) {
+        .catch((err) => {
             callback && callback(err);
         });
 };

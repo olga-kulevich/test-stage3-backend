@@ -1,9 +1,11 @@
+'use strict';
+
 /**
  * Format validation result (error)
  * @param {{msg: String}} error - error argument
  * @returns {String} error text message
  */
-let errorFormatter = function errorFormatter({msg}) {
+const errorFormatter = function errorFormatter({msg}) {
     return `${msg}`;
 };
 
