@@ -37,6 +37,7 @@ var dummyBook2 = {
 };
 
 describe('Books', function () {
+    this.timeout(5000);
 
     beforeEach(function (done) {
         dao.clear(function (err) {
