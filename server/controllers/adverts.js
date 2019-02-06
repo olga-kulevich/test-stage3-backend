@@ -1,6 +1,6 @@
 'use strict';
 
-const Book = require('../dao/book');
+const Advert = require('../dao/advert');
 const mongoose = require('mongoose');
 const errorFormatter = require('./validate/error_formatter');
 const {body, validationResult} = require('express-validator/check');
@@ -14,17 +14,17 @@ const controller = {};
  */
 controller.validate = (method) => {
     switch (method) {
-        case 'updateBook':
+        case 'updateAdvert':
             return [
-                body('name', 'Name is require').exists({checkFalsy: true})
+                body('title', 'Title is require').exists({checkFalsy: true})
             ];
-        case 'createBook':
+        case 'createAdvert':
             return [
-                body('name', 'Name is require').exists({checkFalsy: true})
+                body('title', 'Title is require').exists({checkFalsy: true})
             ];
-        case 'patchBook':
+        case 'patchAdvert':
             return [
-                body ('name', 'Name is require')
+                body ('title', 'Title is require')
                     .exists({checkFalsy: true})
                     .optional()
             ];
@@ -32,18 +32,18 @@ controller.validate = (method) => {
 };
 
 /** 
- * Send specific book entity by id
+ * Send specific advert entity by id
  * @param {Object} req - HTTP request object
  * @param {Object} res - HTTP response object
  * @returns {void}
  */
-controller.getBookById = (req, res) => {
-    Book.findById({_id: req.params.id})
-        .then((book) => {
-            if (book) {
-                res.status(200).send({book: book});
+controller.getAdvertById = (req, res) => {
+    Advert.findById({_id: req.params.id})
+        .then((advert) => {
+            if (advert) {
+                res.status(200).send({advert: advert});
             } else {
-                res.status(404).send({errors: ["Book not exist"]});
+                res.status(404).send({errors: ["Advert not exist"]});
             }
         })
         .catch((error) => {
@@ -51,22 +51,23 @@ controller.getBookById = (req, res) => {
         });
 };
 
+
 /**
- * Send book collection
+ * Send advert collection
  * @param {Object} req - HTTP request object
  * @param {Object} res - HTTP response object
  * @returns {void}
  */
-controller.getBooks = (req, res) => {
-    Book.find({})
-        .then((allBooks) => {
-            let books = [];
+controller.getAdverts = (req, res) => {
+    Advert.find({})
+        .then((allAdverts) => {
+            let adverts = [];
 
-            allBooks.forEach(function(book) {
-                books.push(book);
+            allAdverts.forEach(function(advert) {
+                adverts.push(advert);
             });
 
-            res.status(200).send({books: books});
+            res.status(200).send({adverts: adverts});
         })
         .catch((err) => {
             console.error(err);
@@ -74,51 +75,49 @@ controller.getBooks = (req, res) => {
 };
 
 /**
- * Update book
+ * Update advert
  * @param {Object} req - HTTP request object
  * @param {Object} res - HTTP response object
  * @returns {void}
  */
-controller.updateBook = (req, res) => {
+controller.updateAdvert = (req, res) => {
     const id = req.params.id;
     const resultValidation = validationResult(req).formatWith(errorFormatter);
 
     if (!resultValidation.isEmpty()) {
         res.status(400).send({errors: resultValidation.array()});
     } else {
-        Book.findById({_id: id}, (err, existingBook) => {
-            if (existingBook && (!req.body._id || existingBook._id === req.body._id)) {
-                Book.findOneAndUpdate(
+        Advert.findById({_id: id}, (err, existingAdvert) => {
+            if (existingAdvert && (!req.body._id || existingAdvert._id === req.body._id)) {
+                Advert.findOneAndUpdate(
                     {_id: id},
                     {
                         $set: {
-                            name: req.body.name,
-                            publishing: req.body.publishing,
-                            ebook: req.body.ebook,
-                            isbn: req.body.isbn,
-                            author: req.body.author,
-                            pages: req.body.pages,
-                            year: req.body.year
+                            title: req.body.title,
+                            description: req.body.description,
+                            category: req.body.category,
+                            price: req.body.price,
+                            author: req.body.author
                         }
                     },
                     {new: true, runValidators: true}
                 )
-                    .then((book) => {
-                        res.status(200).send({book});
+                    .then((advert) => {
+                        res.status(200).send({advert});
                     })
 
                     .catch((err) => {
                         console.error(err);
                     })
-            } else if (!existingBook) {
-                res.status(404).send({errors: ["Book not exist"]});
-            } else if (existingBook._id !== req.body._id){
-                Book.findById({_id: req.body._id})
-                    .then((findBook) => {
-                        if (findBook) {
+            } else if (!existingAdvert) {
+                res.status(404).send({errors: ["Advert not exist"]});
+            } else if (existingAdvert._id !== req.body._id){
+                Advert.findById({_id: req.body._id})
+                    .then((findAdvert) => {
+                        if (findAdvert) {
                             res
                                 .status(400)
-                                .send({errors: ["Book with this id already exist"]});
+                                .send({errors: ["Advert with this id already exist"]});
                         }
                     })
                     .catch ((err) => {
@@ -130,42 +129,42 @@ controller.updateBook = (req, res) => {
 };
 
 /**
- * Patch book
+ * Patch advert
  * @param {Object} req - HTTP request object
  * @param {Object} res - HTTP response object
  * @returns {void}
  */
-controller.patchBook = (req, res) => {
+controller.patchAdvert = (req, res) => {
     const id = req.params.id;
     const resultValidation = validationResult(req).formatWith(errorFormatter);
 
     if (!resultValidation.isEmpty()) {
         res.status(400).send({errors: resultValidation.array()});
     } else {
-        Book.findById({_id: id}, (err, existingBook) => {
-            if (existingBook && (!req.body._id || existingBook._id === req.body._id)) {
+        Advert.findById({_id: id}, (err, existingAdvert) => {
+            if (existingAdvert && (!req.body._id || existingAdvert._id === req.body._id)) {
                 if (req.body._id) {
                     delete req.body._id;
                 }
                 for (let pr in req.body) {
-                    existingBook[pr] = req.body[pr];
+                    existingAdvert[pr] = req.body[pr];
                 }
-                existingBook.save()
-                    .then((book) => {
-                        res.status(200).send({book});
+                existingAdvert.save()
+                    .then((advert) => {
+                        res.status(200).send({advert});
                     })
                     .catch((err) => {
                         console.error(err);
                     })
-            } else if (!existingBook) {
-                res.status(404).send({errors: ["Book not exist"]});
+            } else if (!existingAdvert) {
+                res.status(404).send({errors: ["Advert not exist"]});
             } else if (req.body._id) {
-                Book.findById({_id: req.body._id})
-                    .then((findBook) => {
-                        if (findBook) {
+                Advert.findById({_id: req.body._id})
+                    .then((findAdvert) => {
+                        if (findAdvert) {
                             res
                                 .status(400)
-                                .send({errors: ["Book with this id already exist"]});
+                                .send({errors: ["Advert with this id already exist"]});
                         }
                     })
                     .catch((err) =>{
@@ -177,38 +176,36 @@ controller.patchBook = (req, res) => {
 };
 
 /**
- * Create book
+ * Create advert
  * @param {Object} req - HTTP request object
  * @param {Object} res - HTTP response object
  * @returns {void}
  */
-controller.createBook = (req, res) => {
-    const id = req.body._id;
+controller.createAdvert = (req, res) => {
+    let id = req.body._id;
     const resultValidation = validationResult(req).formatWith(errorFormatter);
 
     if (!resultValidation.isEmpty()) {
         res.status(400).send({errors: resultValidation.array()});
     } else {
-       Book.findById({_id: id}, (err, existedBook) => {
-            if (!existedBook) {
+        Advert.findById({_id: id}, (err, existedAdvert) => {
+            if (!existedAdvert) {
                 if (!id) {
                     id = new mongoose.Types.ObjectId();
                 }
 
-                const book = new Book({
+                const advert = new Advert({
                     _id: id,
-                    name: req.body.name,
-                    publishing: req.body.publishing,
-                    ebook: req.body.ebook,
-                    isbn: req.body.isbn,
-                    author: req.body.author,
-                    pages: req.body.pages,
-                    year: req.body.year
+                    title: req.body.title,
+                    description: req.body.description,
+                    category: req.body.category,
+                    price: req.body.price,
+                    author: req.body.author
                 });
 
-                book.save()
-                    .then((book) => {
-                        res.status(201).send({book});
+                advert.save()
+                    .then((advert) => {
+                        res.status(201).send({advert});
                     })
                     .catch((err) => {
                         console.error(err);
@@ -216,23 +213,23 @@ controller.createBook = (req, res) => {
             } else {
                 res
                     .status(400)
-                    .send({errors: ["Book with this id already exist"]});
+                    .send({errors: ["Advert with this id already exist"]});
             }
         });
     }
 };
 
 /**
- * Delete book
+ * Delete advert
  * @param {Object} req - HTTP request object
  * @param {Object} res - HTTP response object
  * @returns {void}
  */
-controller.removeBook = (req, res) => {
-    Book.findByIdAndRemove({_id: req.params.id})
+controller.removeAdvert = (req, res) => {
+    Advert.findByIdAndRemove({_id: req.params.id})
         .then((item) => {
             if (!item) {
-                res.status(404).send({errors: ["Book not exist"]});
+                res.status(404).send({errors: ["Advert not exist"]});
             }
             if (item) {
                 res.status(200).send({status: 'OK'});

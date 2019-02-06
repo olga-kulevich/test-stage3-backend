@@ -5,7 +5,7 @@ var mocha = require('mocha');
 var chai = require('chai');
 
 var app = require('../app');
-var controller = require('../controllers/books');
+var controller = require('../controllers/adverts');
 var DAO = require('../dao');
 
 var dao = new DAO({host: 'localhost', port: 27017, name: 'testing'});

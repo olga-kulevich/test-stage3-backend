@@ -2,7 +2,7 @@
 
 const mongoose = require('mongoose');
 const Author = require('../dao/author');
-const Book = require('../dao/book');
+const Advert = require('../dao/advert');
 
 /**
  * Data Access Layer
@@ -63,10 +63,10 @@ DAO.prototype.init = function (data, callback) {
                                 });
                         });
                     }
-                    if (collection.name === 'books') {
-                        collection.rows.forEach((bookData) => {
-                            const book = new Book(bookData);
-                            book.save()
+                    if (collection.name === 'adverts') {
+                        collection.rows.forEach((advertData) => {
+                            const advert = new Advert(advertData);
+                            advert.save()
                                 .then(() => {
                                     quantityInserted++;
                                     if (quantityInserted === quantityToInsert){
@@ -80,6 +80,7 @@ DAO.prototype.init = function (data, callback) {
                     }
                 });
             }
+            callback && callback();
         })
         .catch((error) => {
             callback && callback(error);

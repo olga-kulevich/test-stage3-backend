@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const DAO = require('./dao');
 const authors = require('./routes/authors');
-const books = require('./routes/books');
+const adverts = require('./routes/adverts');
 
 const PORT = 3000;
 
@@ -13,16 +13,20 @@ const app = express();
 const dao = new DAO({
     host: 'localhost',
     port: 27017,
-    name: 'testing'
+    name: 'advertboard'
 });
 
 /**
  * Middleware
  */
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, '../public')));
-
 
 /**
  * Routes
@@ -31,7 +35,7 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname + '../web/index.html'));
 });
 app.use('/api/authors', authors);
-app.use('/api/books', books);
+app.use('/api/adverts', adverts);
 
 /**
  * Init database
