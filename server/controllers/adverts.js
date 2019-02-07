@@ -47,7 +47,7 @@ controller.getAdvertById = (req, res) => {
             }
         })
         .catch((error) => {
-            res.status(404).send({error});
+            res.status(400).send({error});
         });
 };
 
@@ -61,16 +61,10 @@ controller.getAdvertById = (req, res) => {
 controller.getAdverts = (req, res) => {
     Advert.find({})
         .then((allAdverts) => {
-            let adverts = [];
-
-            allAdverts.forEach(function(advert) {
-                adverts.push(advert);
-            });
-
-            res.status(200).send({adverts: adverts});
+            res.status(200).send(allAdverts);
         })
-        .catch((err) => {
-            console.error(err);
+        .catch((error) => {
+            res.status(400).send(error);
         });
 };
 
