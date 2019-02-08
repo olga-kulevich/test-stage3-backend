@@ -41,7 +41,7 @@ controller.getAdvertById = (req, res) => {
     Advert.findById({_id: req.params.id})
         .then((advert) => {
             if (advert) {
-                res.status(200).send({advert: advert});
+                res.status(200).send(advert);
             } else {
                 res.status(404).send({errors: ["Advert not exist"]});
             }
@@ -97,7 +97,7 @@ controller.updateAdvert = (req, res) => {
                     {new: true, runValidators: true}
                 )
                     .then((advert) => {
-                        res.status(200).send({advert});
+                        res.status(200).send(advert);
                     })
 
                     .catch((err) => {
@@ -145,7 +145,7 @@ controller.patchAdvert = (req, res) => {
                 }
                 existingAdvert.save()
                     .then((advert) => {
-                        res.status(200).send({advert});
+                        res.status(200).send(advert);
                     })
                     .catch((err) => {
                         console.error(err);
