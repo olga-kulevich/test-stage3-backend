@@ -10,10 +10,24 @@ const advertSchema = mongoose.Schema(
         },
         title: String,
         description: String,
-        category: String,
+        category: {
+          type: String,
+          required: true,
+          enum: [
+            "Realty",
+            "Auto and transport",
+            "Mechanism",
+            "Fashion & Style",
+            "Home",
+            "Repair and construction",
+            "Garden",
+            "Services",
+            "Other"
+          ]
+        },
         price: Number,
         views: Number,
-        author: Number,
+        author: String,
         modified: Date,
         created: Date
     },
