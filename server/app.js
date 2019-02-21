@@ -24,9 +24,6 @@ app.use(cors());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, '../public')));
-app.use(function(req, res, next) {
-    setTimeout(() => {next()}, 3000);
-});
 /**
  * Routes
  */
