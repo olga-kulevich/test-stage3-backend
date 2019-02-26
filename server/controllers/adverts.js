@@ -59,15 +59,7 @@ controller.getAdvertById = (req, res) => {
  * @returns {void}
  */
 controller.getAdverts = (req, res) => {
-    const direction = req.query.direction;
-    const filter = {};
-    if (req.query.price) {
-        filter.price = req.query.price;
-    }
-    if (req.query.title) {
-        filter.title = new RegExp(req.query.title, 'i');
-    }
-    Advert.find(filter, null, {sort: {price: direction}})
+    Advert.find({})
         .then((allAdverts) => {
             res.status(200).send(allAdverts);
         })
